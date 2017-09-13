@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- member_mapper.xml : 회원(member)관리 관련 쿼리문이 들어간다. -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 1. parameterType에 1개의 Type만 올 수 있다. 2. parameterType에 bean인 경우 #{필드명} 
+	3. parameterType에 Map<key, value>타입인 경우 #{key}로 쓴다. 4. resultType도 1개만 올 
+	수 있는데 selectList인 경우 List로 변환한다. -->
+
+<mapper namespace="evaluate">
+	<select id="getEVMaxNum" resultType="Integer">
+		<!-- 만약에 MAX(R_NUM)이 NULL이면 NVL(NULL VALUE)를 0으로 세팅해준다. -->
+		SELECT NVL(MAX(E_NUM),0) FROM EVALUATE
+	</select>
+	<insert id="insertProjectEvaluate" parameterType="evaluate">
+		insert into evaluate(e_num, e_score, e_content, e_mid, e_pnum) values(#{e_num},#{e_score},#{e_content},#{e_mid},#{e_pnum})
+	</insert>
+	<select id="getEVCount" resultType="Integer">
+		SELECT COUNT(*) FROM evaluate
+	</select>
+</mapper>

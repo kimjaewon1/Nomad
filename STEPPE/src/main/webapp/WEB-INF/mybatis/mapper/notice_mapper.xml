@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 1. parameterType에 1개의 Type만 올 수 있다. 2. parameterType에 bean인 경우 #{필드명} 
+	3. parameterType에 Map<key, value>타입인 경우 #{key}로 쓴다. 4. resultType도 1개만 올 
+	수 있는데 selectList인 경우 List로 변환한다. -->
+
+<mapper namespace="notice">
+	<insert id="insertNotice" parameterType="notice">
+		INSERT INTO NOTICE VALUES(#{n_num},#{n_mid},#{n_title},#{n_content},default,#{n_mname})
+	</insert>
+	
+	<select id="getNoticeMaxNum" resultType="Integer">
+		<!-- 만약에 MAX(R_NUM)이 NULL이면 NVL(NULL VALUE)를 0으로 세팅해준다. -->
+		SELECT NVL(MAX(N_NUM),0) FROM NOTICE
+		<!-- SELECT MAX(N_NUM) FROM NOTICE -->
+	</select>
+	<select id="getNoticeList" parameterType="Integer" resultType="notice">
+		
+		<![CDATA[
+		SELECT * FROM NLIST WHERE RNUM>=#{pageNum}*10-9 AND RNUM<=#{pageNum}*10 ORDER BY N_NUM
+		]]>
+		<!-- SELECT * FROM NOTICE ORDER BY N_NUM -->
+	</select>
+	
+	<select id="getNoticeCount" resultType="Integer">
+		SELECT COUNT(*) FROM NLIST
+	</select>
+	
+	<select id="getName" resultType="String">
+		SELECT m_name FROM MEMBER WHERE M_ID = #{m_id} 
+	</select>
+	<select id="getNoticeDetail" parameterType="Integer" resultType="notice"> 
+		SELECT * FROM NOTICE WHERE N_NUM = #{n_num}
+	</select>
+	
+	<delete id="noticeDelete" parameterType="Integer">
+		DELETE FROM NOTICE WHERE n_num = #{nnum}
+	</delete>
+	
+	<update id="noticeUpdate" parameterType="notice">
+		UPDATE NOTICE SET n_title = #{n_title}, n_content = #{n_content}  WHERE n_num = #{n_num}
+	</update>
+		
+</mapper>
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chat">
+	<insert id="chatSubmit" parameterType="Map">
+		INSERT INTO chat VALUES(#{chatNum},#{pnum},#{mid},#{chatContent},default)
+	</insert>
+	<select id="getTenList" parameterType="Map" resultType="Chat">
+		<![CDATA[
+			SELECT * FROM chat WHERE c_id > (select max(c_id) - #{listType} FROM chat) ORDER BY c_date
+		]]>
+	</select>
+	<select id="getChatList" parameterType="Map" resultType="Chat">
+		<![CDATA[
+			SELECT * FROM chat WHERE c_id > #{listType} AND c_pnum = #{pnum} ORDER BY c_date
+		]]>
+	</select>
+	<select id="chatMaxNum" resultType="Integer">
+		SELECT MAX(c_id) FROM chat
+	</select>
+	<select id="chatCount" resultType="Integer">
+		SELECT COUNT(*) FROM chat
+	</select>
+</mapper>

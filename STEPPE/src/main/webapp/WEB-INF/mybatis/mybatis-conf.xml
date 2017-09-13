@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mybatis 공통적인 환경 설정 -->
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration><!-- 이것이 conf.xml에서는 꼭 필요 -->
+	<settings> 
+	<setting name="cacheEnabled" value="false"/> 
+	<setting name="useGeneratedKeys" value="true"/> 
+	<setting name="lazyLoadingEnabled" value="true"/> 
+	<setting name="defaultExecutorType" value="BATCH"/> 
+	<setting name="defaultStatementTimeout" value="3000"/> 
+	</settings>
+	
+	<typeAliases>
+		<typeAlias alias="member" type="com.steppe.nomad.bean.Member"/>
+		<typeAlias alias="career" type="com.steppe.nomad.bean.Career"/>
+		<typeAlias alias="profile" type="com.steppe.nomad.bean.Profile"/>
+		<typeAlias alias="skill" type="com.steppe.nomad.bean.Skill"/>
+		<typeAlias alias="portfolio" type="com.steppe.nomad.bean.Portfolio"/>
+		<typeAlias alias="test"  type="com.steppe.nomad.bean.Test"/>
+		<typeAlias alias="answer" type="com.steppe.nomad.bean.Answer"/>
+		<typeAlias alias="result" type="com.steppe.nomad.bean.Result"/>
+		<typeAlias alias="career" type="com.steppe.nomad.bean.Career"/>
+		<typeAlias alias="project" type="com.steppe.nomad.bean.Project" />
+		<typeAlias alias="notice" type="com.steppe.nomad.bean.Notice" />
+		<typeAlias alias="catagory" type="com.steppe.nomad.bean.Catagory"/>
+		<typeAlias alias="required_skill" type="com.steppe.nomad.bean.Required_Skill"/>
+		<typeAlias alias="volunteer" type="com.steppe.nomad.bean.Volunteer"/>
+		<typeAlias alias="chat" type="com.steppe.nomad.bean.Chat"/>
+		<typeAlias alias="accounting" type="com.steppe.nomad.bean.Accounting"/>
+		<typeAlias alias="report" type="com.steppe.nomad.bean.Report"/>
+		<typeAlias alias="purchase_detail" type="com.steppe.nomad.bean.Purchase_detail"/>
+		<typeAlias alias="reply" type="com.steppe.nomad.bean.Reply"/>
+		<typeAlias alias="client_mypage" type="com.steppe.nomad.bean.Client_mypage"/>
+
+		<typeAlias alias="project_bookmark" type="com.steppe.nomad.bean.Project_bookmark"/>
+		<typeAlias alias="project_pBookmark" type="com.steppe.nomad.bean.Project_pBookmark"/>
+		<typeAlias alias="verylike" type="com.steppe.nomad.bean.VeryLike"/>
+		<typeAlias alias="evaluate" type="com.steppe.nomad.bean.Evaluate"/>
+		<typeAlias alias="pms" type="com.steppe.nomad.bean.Pms"/>
+	</typeAliases> 
+</configuration> 

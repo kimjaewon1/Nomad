@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="volunteer">
+
+	<select id="chatRoomList" parameterType="String" resultType="Volunteer">
+		SELECT p.p_title, v.v_pnum, p.p_mid FROM project p INNER JOIN volunteer v ON p.p_num = v.v_pnum 
+		WHERE v.v_ptteam = 1 AND v.v_mid = #{mid} OR p.p_mid = #{mid}
+	</select>
+	<select id="showApplyList" resultType="volunteer" parameterType = "Integer">
+	<![CDATA[
+		select rownum, v.v_num, v.v_mid, v.v_bid, v.v_pnum from volunteer v inner join project p on v.v_pnum = p.p_num where v.v_pnum=#{p_num} order by v.v_bid, v.v_time
+	]]>
+	</select>
+	
+	<select id="checkVolunteerList" resultType="Integer" parameterType = "volunteer">
+		SELECT COUNT(V_NUM) FROM VOLUNTEER WHERE V_PNUM = #{v_pnum} AND V_MID = #{v_mid}
+	</select>
+	
+	<update id="UpdateVolunteer" parameterType="Integer">
+		update volunteer set
+		v_ptteam=1 where v_pnum = #{v_pnum}
+	</update>
+
+	<select id="volunteerCheck" resultType="Integer" parameterType="String">
+		select Count(v_ptteam) from volunteer where v_mid=#{p_mid}
+	</select>
+	
+	<select id="getPerson" resultType="Integer" parameterType="Integer">
+		select Count(v_mid) from volunteer where v_pnum=#{v_pnum}
+	</select>
+	
+	<select id="getVolunteerList" resultType="volunteer" parameterType="Integer">
+		select * from volunteer where v_pnum=#{v_pnum}
+	</select>
+	
+	<select id="getVolunteerMaxNum" resultType="Integer">
+		SELECT NVL(MAX(V_NUM),0) FROM VOLUNTEER
+	</select>
+	
+	<insert id="insertVolunteer" parameterType="volunteer">
+		INSERT INTO VOLUNTEER VALUES(#{v_num},0,#{v_pnum},#{v_mid},#{v_bid},DEFAULT)
+	</insert>
+	
+	<update id="updateBid" parameterType="volunteer">
+		UPDATE VOLUNTEER SET V_BID = #{v_bid} WHERE V_MID = #{v_mid} AND V_PNUM = #{v_pnum}
+	</update>
+
+	<delete id="deleteVolunteer" parameterType="volunteer">
+		DELETE FROM volunteer WHERE v_pnum = #{v_pnum} AND v_mid = #{v_mid}
+	</delete>
+	<select id="freeSelectVounteer" parameterType="String" resultType="volunteer">
+      SELECT * FROM volunteer WHERE v_mid = #{mid} AND v_ptteam = 1
+    </select>
+    
+    <select id="showApplyList2" parameterType="volunteer" resultType="volunteer">
+     <![CDATA[
+		select v.v_num, v.v_mid, v.v_bid from volunteer v inner join project p on v.v_pnum = p.p_num where v.v_num=#{v_num} and v.v_mid=#{v_mid} and v.v_bid=#{v_bid} and #{rownum} <= p.p_person
+	]]>
+    </select>
+</mapper>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- member_mapper.xml : 회원(member)관리 관련 쿼리문이 들어간다. -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 1. parameterType에 1개의 Type만 올 수 있다.
+2. parameterType에 bean인 경우 #{필드명}
+3. parameterType에 Map<key, value>타입인 경우 #{key}로 쓴다.
+4. resultType도 1개만 올 수 있는데 selectList인 경우 List로 변환한다. -->
+<mapper namespace="project">
+	<select id="showProcess" parameterType="Map" resultType="Project"> 
+		<choose>
+    		<when test='p_status == "0"'>
+    		SELECT * FROM project WHERE p_mid = #{m_id}
+    		</when>
+    		<when test='p_status == "1"'>
+      		SELECT * FROM project WHERE p_mid = #{m_id} AND p_status = #{p_status}
+    		</when>
+    		<when test='p_status == "2"'>
+      		SELECT * FROM project WHERE p_mid = #{m_id} AND p_status = #{p_status}
+    		</when>
+    		<when test='p_status == "3"'>
+      		SELECT * FROM project WHERE p_mid = #{m_id} AND p_status = #{p_status}
+    		</when>
+    		<when test='p_status == "4"'>
+      		SELECT * FROM project WHERE p_mid = #{m_id} AND p_status = #{p_status}
+    		</when>
+    	</choose>
+	</select>
+	<select id="freeShowProcess" parameterType="Map" resultType="Pms"> 
+      <choose>
+          <when test='p_status == "0"'>
+             SELECT * FROM project p INNER JOIN volunteer v ON p.p_num = v.v_pnum WHERE v.v_mid=#{m_id} AND v.v_ptteam = 1
+          </when>
+          <when test='p_status == "1"'>
+             SELECT * FROM project p INNER JOIN volunteer v ON p.p_num = v.v_pnum WHERE v.v_mid=#{m_id} AND v.v_ptteam = 1 AND p.p_status = #{p_status}
+          </when>
+          <when test='p_status == "2"'>
+             SELECT * FROM project p INNER JOIN volunteer v ON p.p_num = v.v_pnum WHERE v.v_mid=#{m_id} AND v.v_ptteam = 1 AND p.p_status = #{p_status}
+          </when>
+          <when test='p_status == "3"'>
+             SELECT * FROM project p INNER JOIN volunteer v ON p.p_num = v.v_pnum WHERE v.v_mid=#{m_id} AND v.v_ptteam = 1 AND p.p_status = #{p_status}
+          </when>
+          <when test='p_status == "4"'>
+             SELECT * FROM project p INNER JOIN volunteer v ON p.p_num = v.v_pnum WHERE v.v_mid=#{m_id} AND v.v_ptteam = 1 AND p.p_status = #{p_status}
+          </when>
+       </choose>
+  	</select>
+	<update id="progressUpdate" parameterType="java.util.Map">
+		UPDATE project SET p_status = #{progNum} where p_num = #{btnNum}
+	</update>
+	<select id="showMyProjectList" parameterType="String" resultType="Project">
+      SELECT * FROM project p INNER JOIN volunteer v ON p.p_num = v.v_pnum WHERE v.v_mid = #{id} OR p.p_mid = #{id} AND v.v_ptteam = 1
+   </select>
+	<select id="showMyMemberList" parameterType="Map" resultType="Member">
+		SELECT m_id, m_name, m_email FROM member where m_id IN (SELECT v_mid FROM volunteer where v_pnum = #{pNum})
+		<!-- SELECT * FROM project WHERE p_title = #{title} AND p_num = #{pNum} -->
+	</select>
+	<delete id="deleteTeamMember" parameterType="String">
+		DELETE FROM volunteer WHERE v_mid = #{mid}
+	</delete>
+	<select id="getRequired_SkillList" resultType="required_skill">
+		select * from required_skills
+	</select>
+	
+	<!-- <update id="progressUpdate" parameterType="Integer">
+		UPDATE project SET p_status = #{progNum}
+	</update> -->
+	
+	<select id="getProjectMaxNum" resultType="Integer">
+		select NVL(MAX(p_num),0) FROM project
+	</select>
+	
+	<insert id="insertProject" parameterType = "Map">
+      INSERT INTO project VALUES(#{p_num},#{pc1_name},#{pc2_name},#{p_mid},#{p_budget},#{p_term},#{p_title},#{p_content}
+      							,#{sysFileName},#{p_deadline},#{p_plnum0},#{p_plnum1}, #{p_plnum2}, #{p_person}, #{p_status}, default, default)
+   </insert>
+   
+    <select id="getProjectList2" resultType="project" parameterType="String">
+    SELECT p_num, p_title, p_vol, p_person, p_status,case when p_status=1 then '대기중' when p_status=2 then '작업전' when p_status=3 then '작업중' 
+    when p_status=4 then '작업완료' when p_status=5 then '결제신청' when p_status=6 then '결제완료' else '전체' end as p_status2 from project where p_mid=#{m_id}
+    </select>
+ 
+ 	<update id="UpdateProject" parameterType="Integer">
+  	 update project set p_status=2 where p_num = #{v_pnum}
+    </update>
+    
+    <select id="checkedProject" parameterType="Integer" resultType="Integer">
+		select p_status FROM project where p_num=#{p_num}
+	</select>
+    
+    <delete id="deleteProject" parameterType="Integer">
+		delete from project where p_num=#{p_num}
+	</delete>
+	
+	<select id="getPerson" parameterType="Integer" resultType="Integer">
+		select p_person FROM project where p_num=#{p_num}
+	</select>
+	
+	<select id="getProjectList" parameterType="Integer" resultType="project">
+		<![CDATA[
+		SELECT * FROM PLIST WHERE RNUM>=#{pageNum}*10-9 AND RNUM<=#{pageNum}*10 ORDER BY P_NUM
+		]]>
+		<!-- select * from project -->
+	</select>
+	
+	<select id="getProjectCount" resultType="Integer">
+		SELECT COUNT(*) FROM PLIST
+	</select>
+	<select id="getProjectDVCount" resultType="Integer">
+		SELECT COUNT(*) FROM PLIST WHERE p_pc1name = '개발'
+	</select>
+	<select id="getProjectDSCount" resultType="Integer">
+		SELECT COUNT(*) FROM PLIST WHERE p_pc1name = '디자인'
+	</select>
+	
+	<delete id="projectDelete" parameterType="Integer">
+		DELETE FROM PROJECT WHERE p_num = #{pnum}
+	</delete>
+	
+	<select id="getDevelopList" resultType="project">
+		select * from project where p_pc1name = '개발' ORDER BY P_NUM
+	</select>
+	
+	<select id="getDesignList" resultType="project">
+		select * from project where p_pc1name = '디자인' ORDER BY P_NUM
+	</select>
+	<select id="getSearchResult" parameterType="String" resultType="project">
+	SELECT * FROM PROJECT WHERE P_MID LIKE '%'||#{keyword}||'%' OR
+	P_PC1NAME LIKE '%'||#{keyword}||'%' OR P_PC2NAME LIKE
+	'%'||#{keyword}||'%' OR P_PLNUM0 LIKE '%'||#{keyword}||'%' OR P_PLNUM1
+	LIKE '%'||#{keyword}||'%' OR P_PLNUM2 LIKE '%'||#{keyword}||'%'
+</select>
+
+	<select id="projectCheck" resultType="Integer" parameterType="String">
+		SELECT COUNT(p_mid) FROM project where p_mid=#{p_mid}
+	</select>
+	
+	<select id="CheckStatus" resultType="Integer" parameterType="Integer">
+		SELECT p_status FROM project where p_num=#{p_num}
+	</select>
+	
+	<update id="StatusUpdate" parameterType="Integer">
+		update project set p_status=5 where p_num=#{p_num}
+	</update>
+
+	<select id="getPperson" resultType="Integer" parameterType="Integer">
+		SELECT p_person FROM project where p_num=#{pnum}
+	</select>
+	
+	<update id="updateProStatus" parameterType="Integer">
+		update project set p_status=3 where p_num=#{pnum}
+	</update>
+   
+	<update id="VolunteerUpdate" parameterType="Map">
+		UPDATE PROJECT SET P_VOL = P_VOL+1 WHERE P_NUM = (SELECT V_PNUM FROM VOLUNTEER WHERE V_MID = #{m_id} AND V_PNUM = #{v_pnum})
+	</update>
+	   
+	<select id="getBookmarkProjectList" resultType="project" parameterType="String">
+		SELECT * FROM PROJECT INNER JOIN PROJECT_BOOKMARK ON P_NUM = PB_NUM WHERE PB_FLAG = 1 AND PB_ID = #{p_mid}
+	</select>
+	   
+	<select id="getProjectMaxVol" resultType="Integer" parameterType="Integer">
+		SELECT NVL(MAX(p_vol),0) FROM project where p_num=#{p_num}
+	</select>
+	 
+	<update id="dropProjectVol" parameterType="Integer">
+		update project set p_vol=#{p_vol} where p_num=#{p_num}
+	</update>  
+	
+	<select id="getP_status" resultType="Integer" parameterType="Integer">
+		SELECT p_status FROM project where p_num=#{p_num}
+	</select>
+	
+	<select id="getOneStatus" resultType="Integer" parameterType="Integer">
+		SELECT p_status FROM project where p_num=#{pupnum}
+	</select>
+	
+	<update id="updatefinalStatus" parameterType="Integer">
+		update project set p_status = 6 where p_num=#{pnum1}
+	</update>
+
+</mapper>
+

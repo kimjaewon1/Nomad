@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Profile">
+	<select id="getProfileMaxNum" resultType="Integer">
+		SELECT NVL(MAX(PRO_NUM),0) FROM PROFILE
+	</select>
+	
+	<select id="getProfileList" parameterType="String" resultType="Profile">
+		SELECT PRO_NUM,PRO_MID,M_NAME,MF_SYSNAME,PRO_CONTENT FROM PROFILE INNER JOIN MEMBER ON PRO_MID = member.m_id INNER JOIN MEMBERFILE on m_id=mf_mid where mf_mid=#{m_id}
+	</select>
+	
+	<insert id="insertProfile" parameterType="profile">
+		INSERT INTO PROFILE VALUES(#{pro_num},#{m_id},#{pro_content})
+	</insert>
+	
+	<delete id="deleteProfile" parameterType="profile">
+		DELETE FROM PROFILE WHERE PRO_NUM = #{pro_num}
+	</delete>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- member_mapper.xml : 회원(member)관리 관련 쿼리문이 들어간다. -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="purchase_detail">
+	<select id="selectPurchase_detail" resultType="purchase_detail" parameterType = "purchase_detail">
+	  select pd_num, pd_punum, pd_mid, pd_money, pd_catagory, case when pd_catagory='P' then '결제액' when pd_catagory='R' 
+	  then '환불액' else '오류' end as pd_catagory2 from purchase_detail where pd_punum=#{pd_punum} AND pd_mid=#{pd_mid}
+	</select>
+	
+	<select id="getPurchaseListFr" resultType="purchase_detail" parameterType = "Integer">
+	   select ROWNUM, d.pd_num, d.pd_punum, d.pd_money from purchase e inner join project p
+	  on e.pu_pnum=p.p_num inner join purchase_detail d on e.pu_num = d.pd_punum where d.pd_punum = #{pd_punum} AND
+	  d.pd_catagory = 'D' AND ROWNUM=1
+	</select>
+	
+	<select id="getPurchaseListAr" resultType="purchase_detail" parameterType = "Integer">
+	   select d.pd_num, d.pd_punum, d.pd_money from purchase e inner join project p
+	  on e.pu_pnum=p.p_num inner join purchase_detail d on e.pu_num = d.pd_punum where d.pd_punum = #{pd_punum} AND
+	  d.pd_catagory = 'H'
+	</select>
+	
+	<insert id="InsertSales" parameterType = "purchase_detail">
+	 insert into purchase_detail values(#{pd_num},#{pd_punum},#{pd_mid},#{pd_money},#{pd_catagory})
+	</insert>
+	
+	<select id="getFinishFlow" resultType="purchase_detail" parameterType = "purchase_detail">
+	 select d.pd_num, d.pd_punum, d.pd_money/p.p_person as pd_money from purchase e inner join project p
+	  on e.pu_pnum=p.p_num inner join purchase_detail d on e.pu_num = d.pd_punum where d.pd_punum = #{pd_punum} AND
+	  d.pd_catagory = #{pd_catagory}
+	</select>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="client_mypage">
+	<select id="getWaitProjectList" resultType="client_mypage" parameterType="String">
+		SELECT * FROM volunteer v inner join project p on v.v_pnum = p.p_num WHERE p.P_STATUS = 1 AND v.v_mid = #{v_mid}
+	</select>
+	
+	<select id="getOnGoingProjectList" resultType="client_mypage" parameterType="String">
+		 SELECT p.p_num, p.p_title, v.v_num, c.pu_money*0.952/p.p_person as sales FROM volunteer v inner join project p on v.v_pnum = p.p_num inner join purchase c
+		on c.pu_pnum = p.p_num WHERE p.P_STATUS = 3 AND v.v_MID = #{v_mid}
+	</select>
+	
+	<select id="getCompleteProjectList" resultType="client_mypage" parameterType="String">
+		SELECT p.p_num, p.p_title, v.v_num, c.pu_money*0.952/p.p_person as sales FROM volunteer v inner join project p on v.v_pnum = p.p_num inner join purchase c
+		on c.pu_pnum = p.p_num WHERE p.P_STATUS = 6 AND v.v_MID = #{v_mid}
+	</select>
+	
+</mapper>

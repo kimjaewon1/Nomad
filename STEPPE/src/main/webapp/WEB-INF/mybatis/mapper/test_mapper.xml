@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- test_mapper.xml :문제관련 쿼리문 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+1.parameterType에 1개인 type만 올수있다.
+2.parameterType에 bean인경우 #{필드명}
+3.parameterType에 Map<key, value>타입인 경우 #{key}로쓴다.
+4.resultType도 1개만 올수있는데 selectList인 경우 List로 반환한다.
+ -->
+<mapper namespace="test">
+	<select id = "getTestCnt" parameterType = "answer" resultType = "Integer">
+		SELECT COUNT(*) FROM ANSWER WHERE A_TNAME = #{a_tname} AND A_MID = #{a_mid}  
+	</select>
+	
+	<select id = "getSum" parameterType = "answer" resultType = "Integer">
+		SELECT COUNT(*) FROM ANSWER WHERE A_TNAME = #{a_tname} AND A_MID = #{a_mid} AND A_CHECK = 1
+	</select>
+	
+	<select id = "selectResult" parameterType = "result" resultType = "Integer">
+		SELECT NVL(MAX(RS_PC),0) FROM RESULT WHERE RS_TNAME = #{rs_tname} AND RS_MID = #{rs_mid}
+	</select>
+	
+	<select id = "getFstTest" parameterType = "Integer" resultType = "test">
+		SELECT * FROM TEST WHERE T_NUM = #{t_num}
+	</select>
+	
+	<select id = "getTestList" parameterType = "String" resultType = "test">
+		SELECT * FROM TEST WHERE T_NAME = #{t_name} ORDER BY T_NUM
+	</select>
+	
+	<select id = "findName" parameterType = "String" resultType = "result">
+		SELECT * FROM RESULT WHERE RS_MID = #{rs_mid}
+	</select>
+	
+	<select id = "showFstDetail" parameterType = "Integer" resultType="test">
+		SELECT * FROM TEST WHERE T_NUM = #{t_num}
+	</select>
+	
+	<select id = "getT_answer" parameterType = "test" resultType = "Integer">
+		SELECT T_ANSWER FROM TEST WHERE T_NAME = #{t_name} AND T_NUM = #{t_num}
+	</select>
+	
+	<select id = "getTestMaxNum" resultType="Integer">
+		SELECT NVL(MAX(T_NUM),0) FROM TEST
+	</select>
+	
+	<select id = "getAnswerMaxNum" resultType="Integer">
+		SELECT NVL(MAX(A_NUM),0) FROM ANSWER
+	</select>
+	
+	<select id = "getResultMaxNum" resultType="Integer">
+		SELECT NVL(MAX(RS_NUM),0) FROM RESULT
+	</select>
+	
+	<insert id = "insertFst" parameterType = "test">
+		INSERT INTO TEST VALUES(#{t_num},#{t_name},#{t_content},#{t_answer},#{t_no1},#{t_no2},#{t_no3},#{t_no4})
+	</insert>
+	
+	<insert id = "insertAnswer" parameterType = "answer">
+		INSERT INTO ANSWER VALUES(#{a_num},#{a_mid},#{a_tnum},#{a_insertnum},#{a_check},#{a_tname})
+	</insert>
+	
+	<insert id = "insertResult" parameterType = "answer">
+		INSERT INTO RESULT VALUES(#{rs_num},#{rs_mid},#{rs_tname},#{rs_pc})
+	</insert>
+	
+	<update id = "updateFst" parameterType = "test">
+		UPDATE TEST SET 
+			T_NAME = #{t_name},
+			T_CONTENT = #{t_content},
+			T_ANSWER = #{t_answer},
+			T_NO1 = #{t_no1},
+			T_NO2 = #{t_no2},
+			T_NO3 = #{t_no3},
+			T_NO4 = #{t_no4}
+		WHERE T_NUM = #{t_num}
+	</update>
+	
+	<update id = "updateResult" parameterType = "result">
+		UPDATE RESULT SET 
+			RS_PC = #{rs_pc}
+		WHERE RS_MID = #{rs_mid} AND RS_TNAME = #{rs_tname}
+	</update>
+	
+	<delete id="deleteFst" parameterType = "Integer">
+		DELETE FROM TEST WHERE T_NUM = #{t_num}
+	</delete>
+	
+	<delete id="deleteAnsNum" parameterType = "Integer">
+		DELETE FROM ANSWER WHERE A_TNUM = #{t_num}
+	</delete>
+	
+	<delete id="deleteAnswer" parameterType = "answer">
+		DELETE FROM ANSWER WHERE A_TNAME = #{a_tname} AND A_MID = #{a_mid} 
+	</delete>
+	
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- member_mapper.xml : 회원(member)관리 관련 쿼리문이 들어간다. -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 1. parameterType에 1개의 Type만 올 수 있다.
+2. parameterType에 bean인 경우 #{필드명}
+3. parameterType에 Map<key, value>타입인 경우 #{key}로 쓴다.
+4. resultType도 1개만 올 수 있는데 selectList인 경우 List로 변환한다. -->
+
+<mapper namespace="member">
+	<insert id = "memberInsert" parameterType = "member">
+		INSERT INTO MEMBER(M_ID, M_PW, M_NAME,M_EMAIL,M_KIND,M_STATUS) VALUES(#{m_id,jdbcType=VARCHAR},#{m_pw,jdbcType=VARCHAR},#{m_name,jdbcType=VARCHAR},#{m_email,jdbcType=VARCHAR},#{m_kind,jdbcType=CHAR},'N')
+	</insert>
+	<select id="getLoginResult" parameterType = "member" resultType="Integer">
+		SELECT COUNT(*) FROM MEMBER WHERE M_ID=#{m_id} AND M_PW=#{m_pw}
+	</select>
+	<select id="getMemberInfo" parameterType = "String" resultType="member">
+		SELECT * FROM MEMBER WHERE M_ID=#{m_id}
+	</select>
+	
+	<select id="getId" parameterType = "member" resultType="String">
+		SELECT M_ID FROM MEMBER WHERE M_NAME =#{m_name} AND M_EMAIL = #{m_email}
+	</select> 
+	
+	<select id="getPwd" parameterType = "String" resultType="String">
+		SELECT M_PW FROM MEMBER WHERE M_ID=#{m_id}
+	</select>
+	<select id="getPwds" parameterType = "member" resultType="String">
+		SELECT M_PW FROM MEMBER WHERE M_ID=#{m_id} AND M_EMAIL = #{m_email}
+	</select>  
+
+	<select resultType="String" parameterType="String" id="getKind">
+	 	SELECT M_KIND FROM MEMBER WHERE M_ID=#{m_id}
+	</select>
+
+	<select id="isId" parameterType = "String" resultType="String">
+		SELECT M_ID FROM MEMBER WHERE M_ID=#{id}
+	</select>
+	
+	<select id="isName" parameterType = "String" resultType="String">
+		SELECT M_NAME FROM MEMBER WHERE M_NAME=#{m_name}
+	</select>
+	
+	<select id="isEmail" parameterType = "String" resultType="String">
+		SELECT M_EMAIL FROM MEMBER WHERE M_EMAIL=#{email}
+	</select>
+	<insert id="fileInsert" parameterType="Map">
+		INSERT INTO MEMBERFILE VALUES(#{mfnum},#{id},#{sysFileName})
+	</insert>
+	<select id="getMFMaxNum" resultType="Integer">
+		<!-- 만약에 MAX(R_NUM)이 NULL이면 NVL(NULL VALUE)를 0으로 세팅해준다. -->
+		SELECT NVL(MAX(MF_NUM),0) FROM MEMBERFILE
+	</select>
+	<update id="updateMemberInfo" parameterType="member">
+		UPDATE member SET m_pw = #{m_pw}, m_email = #{m_email} WHERE m_id = #{m_id}
+	</update>
+	<update id="updateMFile" parameterType="Map">
+		UPDATE memberFile SET mf_sysname = #{sysFileName} WHERE mf_mid = #{m_id}
+	</update>
+	<select id="getMemberList" parameterType="Integer" resultType="member">
+		
+		<![CDATA[
+		SELECT * FROM MLIST_1 WHERE RNUM>=#{pageNum}*10-9 AND RNUM<=#{pageNum}*10
+		]]>
+	</select>
+	
+	<select id="getMemberCount" resultType="Integer">
+		SELECT COUNT(*) FROM MLIST_1
+	</select>
+	<select id="getMemberCLCount" resultType="Integer">
+		SELECT COUNT(*) FROM MLIST_1 WHERE M_KIND = 'C'
+	</select>
+	<select id="getMemberFRCount" resultType="Integer">
+		SELECT COUNT(*) FROM MLIST_1 WHERE M_KIND = 'F'
+	</select>
+	
+	<update id="addBlackList" parameterType="String">
+		UPDATE MEMBER SET m_status = 'B'  WHERE m_id = #{mid}
+	</update>
+	
+	<select id="getBlackList" parameterType="Integer" resultType="member">
+		
+		<!-- <![CDATA[
+		SELECT * FROM NOTICE WHERE N_NUM>=#{pageNum}*10-9 AND N_NUM<=#{pageNum}*10
+		]]> -->
+		SELECT * FROM MEMBER WHERE M_STATUS = 'B'
+	</select>
+	
+	<update id="goBlackUpdate" parameterType="String">
+		UPDATE MEMBER SET m_status = 'N' WHERE m_id = #{mid}
+	</update>
+	
+	<select id="getClientList" parameterType="Integer" resultType="member">
+		
+		<![CDATA[
+		SELECT * FROM CLLIST WHERE RNUM>=#{pageNum}*10-9 AND RNUM<=#{pageNum}*10 AND M_KIND = 'C'
+		]]>
+		<!-- SELECT * FROM MEMBER WHERE M_KIND = 'C' -->
+	</select>
+	
+	<select id="getFreeLancerList" parameterType="Integer" resultType="member">
+		
+		<![CDATA[
+		SELECT * FROM FRLIST WHERE RNUM>=#{pageNum}*10-9 AND RNUM<=#{pageNum}*10 AND M_KIND = 'F'
+		]]>
+		<!-- SELECT * FROM MEMBER WHERE M_KIND = 'F' -->
+	</select>
+	
+	<select id="getSearchResult" parameterType="String" resultType="member">
+      SELECT * FROM MEMBER WHERE M_ID LIKE '%'||#{keyword}||'%' OR M_NAME LIKE '%'||#{keyword}||'%'
+   </select>
+   
+   <delete id="memberDelete" parameterType="String">
+		DELETE FROM MEMBER WHERE m_id = #{m_id}
+   </delete>
+   
+   <select id="CheckPw" parameterType="String" resultType="String">
+      SELECT m_pw FROM MEMBER WHERE m_id=#{m_id}
+   </select>
+   
+   <delete id="deleteMemberMake" parameterType="String">
+      delete FROM MEMBER WHERE m_id=#{m_id}
+   </delete>
+   
+   
+	<select id="getStatus" parameterType="String" resultType="String">
+   		SELECT M_STATUS FROM MEMBER WHERE M_ID=#{m_id} AND M_STATUS='B'
+   </select>
+</mapper>

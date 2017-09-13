@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="report">
+	<insert	id="insertReport" parameterType="report">
+		INSERT INTO REPORT VALUES(#{r_num},#{r_mid},#{r_kind},#{r_content},#{r_url})
+	</insert>
+	<select id="selectMaxNum" resultType="int">
+		select NVL(MAX(r_num),0) FROM report
+	</select>
+	<select id="getReportList" resultType="report">
+		SELECT * FROM REPORT ORDER BY R_NUM ASC
+	</select>
+	<select id="getProjectList" resultType="project">
+		SELECT * FROM PROJECT ORDER BY P_NUM DESC
+	</select>
+	<select id="getProjectDetail" parameterType="int" resultType="project">
+		SELECT * FROM PROJECT WHERE P_NUM=#{p_num}
+	</select>
+	<delete id="deleteReport" parameterType="Integer">
+		DELETE FROM REPORT WHERE R_NUM=#{r_num}
+	</delete>
+	<select id="searchProject" parameterType="String" resultType="project">
+		SELECT * FROM PROJECT WHERE P_TITLE LIKE '%'||#{keyword}||'%'
+	</select>
+	<!--댓글 테이블 내 컬럼 최대수 계산-->
+	<select id="selectReplyMaxNum" resultType="int">
+		select NVL(MAX(r_num),0) FROM REPLY
+	</select>
+	<!--댓글 삽입-->
+	<insert id="insertReply" parameterType="reply">
+		INSERT INTO REPLY VALUES(#{r_num},#{r_mid},#{r_pnum},#{r_content},default)
+	</insert>
+	<!--댓글 표출-->
+	<select id="showReply" parameterType="Integer" resultType="reply">
+		SELECT * FROM REPLY WHERE R_PNUM=#{r_pnum} ORDER BY R_NUM ASC
+	</select>
+	<!--댓글 삭제-->
+	<delete id="deleteReply" parameterType="Integer">
+		DELETE FROM REPLY WHERE R_NUM=#{r_num}
+	</delete>
+	<select id="getProjectList3" resultType="project">
+		SELECT * FROM PROJECT WHERE P_PC1NAME = '개발' ORDER BY P_NUM ASC
+	</select>
+	<select id="getProjectList4" resultType="project">
+		SELECT * FROM PROJECT WHERE P_PC1NAME = '디자인' ORDER BY P_NUM ASC
+	</select>
+	<select id="getHomeProjectList" resultType="project">
+		SELECT * FROM PROJECT ORDER BY P_NUM DESC
+	</select>
+	<select id="getHomeFreelancerList" resultType="member">
+		SELECT * FROM MLIST WHERE M_KIND='F' ORDER BY M_ID DESC
+	</select>
+	
+</mapper>

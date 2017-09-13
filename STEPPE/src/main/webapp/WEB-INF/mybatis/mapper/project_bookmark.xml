@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project_bookmark">
+	<insert id="bookmarkInsert" parameterType="Map">
+		INSERT INTO project_bookmark VALUES(#{pb_num},#{pb_pnum},default,#{pb_mid},default)
+	</insert>
+	
+	<select id="bookmarkList" parameterType="String" resultType="Project_bookmark">
+		SELECT * FROM project_bookmark WHERE pb_mid = #{mid}
+	</select>
+	
+	<select id="allBookmarkList" resultType="Project_bookmark">
+		SELECT * FROM project_bookmark ORDER BY pb_pnum DESC
+	</select>
+	<select id="bookmarkSelect" resultType="Project_bookmark">
+		SELECT * FROM project_bookmark WHERE pb_id = #{mid} AND pb_pnum = #{pb_pnum}
+	</select>
+	<update id="bookmarkUpdate" parameterType="Map">
+		UPDATE project_bookmark SET pb_flag = #{pb_flag}, pb_id = #{mid} WHERE pb_pnum = #{pb_pnum}
+	</update>
+	
+	<select id="bookmarkFlag" parameterType="Integer" resultType="Project_bookmark">
+		SELECT pb_flag FROM project_bookmark WHERE pb_pnum = #{pb_pnum} 
+	</select>
+	
+	<select id="bookmarkCount" resultType="Integer">
+		SELECT COUNT(*) FROM project_bookmark
+	</select>
+	
+	<select id="bookmarkMaxNum" resultType="Integer">
+		SELECT NVL(MAX(pb_num), 0) FROM project_bookmark                                               
+	</select>
+	
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- member_mapper.xml : 회원(member)관리 관련 쿼리문이 들어간다. -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 1. parameterType에 1개의 Type만 올 수 있다. 2. parameterType에 bean인 경우 #{필드명} 
+	3. parameterType에 Map<key, value>타입인 경우 #{key}로 쓴다. 4. resultType도 1개만 올 
+	수 있는데 selectList인 경우 List로 변환한다. -->
+
+<mapper namespace="client">
+	<select id="getSenderEmail" parameterType="String" resultType="String">
+		SELECT M_EMAIL FROM MEMBER WHERE M_ID = #{sender}
+	</select>
+	<select id="getReciverEmail" parameterType="String" resultType="String">
+		SELECT M_EMAIL FROM MEMBER WHERE M_ID = #{reciver}
+	</select>
+</mapper>

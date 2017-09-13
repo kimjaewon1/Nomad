@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Portfolio">
+	<select id="getPortfolioMaxNum" resultType="Integer">
+		SELECT NVL(MAX(PF_NUM),0) FROM PORTFOLIO
+	</select>
+	
+	<select id="getPortfolioList" parameterType="String" resultType="portfolio">
+		SELECT * FROM PORTFOLIO INNER JOIN PORTFOLIOFILE ON PF_NUM = PT_PFNUM AND PT_NUM = (SELECT MIN(PT_NUM) FROM PORTFOLIOFILE WHERE PT_PFNUM=PF_NUM) WHERE PF_MID = #{m_id}
+	</select>
+	 
+	<select id="getPortfolioCount" resultType="Integer">
+		SELECT COUNT(*) FROM PORTFOLIO
+	</select>
+	
+	<select id="getPortfolioDetailList" parameterType="Integer" resultType="portfolio">
+		SELECT * FROM PORTFOLIO INNER JOIN PORTFOLIOFILE ON PF_NUM = PT_PFNUM WHERE PF_NUM = #{pf_num}
+	</select>
+	
+	<insert id="insertPortfolio" parameterType="portfolio">
+		INSERT INTO PORTFOLIO VALUES(#{pf_num},#{pf_mid},#{pf_title},#{pf_term},#{pf_contribute},#{pf_content})
+	</insert>
+	
+	<insert id="portfolioFileInsert" parameterType="Map">
+		INSERT INTO PORTFOLIOFILE VALUES(portfolioFile_SEQ.nextval, #{pfNum}, #{sysFileName})
+	</insert>
+	
+	<update id="updatePortfolio" parameterType="portfolio">
+		UPDATE PORTFOLIO SET PF_TITLE = #{pf_title}, PF_TERM = #{pf_term}, PF_CONTRIBUTE = #{pf_contribute}, PF_CONTENT = #{pf_content} WHERE PF_NUM= #{pf_num}
+	</update>
+	
+	<delete id="deletePortfolio" parameterType="portfolio">
+		DELETE FROM PORTFOLIO WHERE PF_NUM = #{pf_num}
+	</delete>
+	<select id="getPortfolioView" parameterType="String" resultType="portfolio">
+		SELECT * FROM PORTLIST WHERE PF_MID=#{m_id}
+	</select>
+	<select id="getPortfolioview" parameterType="String" resultType="portfolio">
+		SELECT * FROM PORTLIST WHERE PT_SYSNAME=#{pt_sysname}
+	</select>
+</mapper>
